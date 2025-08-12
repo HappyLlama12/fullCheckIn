@@ -35,7 +35,7 @@ INSTRUCTIONS:
       font-style: normal;
       font-display: swap;
     }
-    :root{--bg:#f6f6f8;--card:#ffffff;--accent:#0b5cff;--muted:#666}
+    :root{--bg:#f6f6f8;--card:#ffffff;--accent:rgb(5,49,154);--muted:#666}
     html,body{height:100%;margin:0;}
     /* Entire page uses Gilroy */
     body {
@@ -79,18 +79,19 @@ INSTRUCTIONS:
       z-index: 1;
     }
     .card{position: relative; z-index:2; width:360px;max-width:92vw;background:var(--card);padding:28px 24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);text-align:center}
-    input[type=text]{width:100%;padding:18px 14px;font-size:17px;margin-bottom:24px;border-radius:5px;border:none; background-color: rgb(230,230,230); box-sizing:border-box;}
-    input[type=text]:focus {
+    input[type=text],input[type=tel],input[type=email],input[type=date]{width:100%;padding:18px 14px;font-size:17px;margin-bottom:24px;border-radius:5px;border:none; background-color: rgb(230,230,230); box-sizing:border-box; font-family: Gilroy, Arial, Helvetica, sans-serif; color: rgb(52,58,64);}
+    input[type=text]:focus, input[type=email]:focus,input[type=tel]:focus,input[type=date]:focus,select:focus{
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 5px var(--accent);
     }
-    input[type=text]::placeholder {
+    /*input[type=text]::placeholder {
       font-weight: normal;
       font-family: Gilroy, Arial, Helvetica, sans-serif;
       font-size: 17px;
       color: rgb(52, 58, 64) !important;
     }
+      */
     button.action{width: 100%;height: 48px; background-color: rgb(5,49,154); color: white; border: none; border-radius: 5px; padding: 12px 18px; font-family: 'Gilroy Bold', system-ui, sans-serif;font-size: 18px; cursor: pointer; letter-spacing: 0px; text-align: center; line-height: 1.2;}
     .outlined-btn{background: #d3d3d3; border: 3px #363636;color: #363636;border-radius: 6px;padding: 6px 12px;cursor: pointer;margin: 4px;font-size: 14px;}
     #status{margin-top:10px;font-weight:600; color: #b00020}
@@ -125,6 +126,38 @@ INSTRUCTIONS:
       #welcomeMessage.status-success {
         color: green;
       }
+      select {
+        width: 100%;
+        padding: 18px 45px 18px 14px; /* top right bottom left*/
+        margin-bottom: 24px;
+        font-size: 17px;
+        border-radius: 5px;
+        border: none;
+        background-color: rgb(230, 230, 230);
+        font-family: Gilroy, Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+        color: rgb(52,58,64);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+
+        background-image: url('data:image/svg+xml;utf8,<svg fill="dark gray" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 20px;
+      }
+      /*input[type=date] {
+        font-family: 'Gilroy', system-ui, sans-serif;
+        color: rgb(52,58,64);
+      }
+      */
+      input::placeholder {
+        color:#808080 !important;
+        font-weight: normal;
+        font-family: 'Gilroy', Arial, Helvetica, sans-serif;
+        font-size: 17px;
+      }
   </style>
 </head>
 <body>
@@ -133,6 +166,25 @@ INSTRUCTIONS:
 
     <div id="inputSection">
       <input type="text" id="fullName" placeholder="Full Name" />
+      <input type="tel" id="phone" placeholder="Phone Number" />
+      <input type="email" id="email" placeholder="Email Address" />
+      <input type="date" id="birthday" placeholder="Birthday" /> 
+
+      
+
+      <select id="faculty">
+        <option value="" disabled selected>Select Faculty</option>
+        <option value="Arts and Science">Faculty of Arts and Science</option>
+        <option value="Education">Faculty of Education</option>
+        <option value="Health Sciences">Faculty of Health Sciences</option>
+        <option value="Law">Faculty of Law</option>
+        <option value="Graduate Studies and Postdoctoral Affairs">School of Graduate Studies and Postdoctoral Affairs</option>
+        <option value="MD">MD Program</option>
+        <option value="Nursing">School of Nursing</option>
+        <option value="Engineering">Smith Engineering</option>
+        <option value="Business">Smith School of Business</option>
+        <option value="Bader">Bader College</option>
+      </select>
 
       <button id="submitBtn" class="action">Check In</button>
 
@@ -208,8 +260,12 @@ input:checked + .slider:before {
    
   <script>
     // ===== CONFIG =====
-    const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeNUhjwb2oFUmtfDaPdB3VvgCdC33cCUN5byjAC4ksv2e5axg/formResponse";
-    const ENTRY_FOR_NAME = "entry.2042773400";
+    const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSe6WCyUZUTdwGfrdI4o7sS9rYbmhnH-ysystS9rDprSf5zSwA/formResponse";
+    const ENTRY_FOR_NAME = "entry.1262182397";
+    const ENTRY_FOR_PHONE = "entry.600998077";
+    const ENTRY_FOR_EMAIL = "entry.1950836464";
+    const ENTRY_FOR_BIRTHDAY = "entry.1103099865";
+    const ENTRY_FOR_FACULTY = "entry.2128704692";
     // ==================
 
     const submitBtn = document.getElementById('submitBtn');
@@ -245,21 +301,55 @@ input:checked + .slider:before {
 
     function handleSubmit(){
       const name = nameInput.value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const birthday = document.getElementById('birthday').value;
+      const faculty = document.getElementById('faculty').value;
+
+      //clear any previous error
+      status.textContent = '';
+      welcomeMessage.style.display = 'none';
+
+      //validate name
        if (!name) {
           status.textContent = 'Please enter your full name.';
           welcomeMessage.style.display = 'none';
           return;
       }
 
-      //clear any previous error
-      status.textContent = '';
+      //validate phone (simple regex for 10 digits)
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(phone)) {
+        status.textContent = 'Please enter a valid 10-digit phone number.';
+        return;
+      }
 
+      // Validate Email (simple email regex)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        status.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      // Validate Birthday (ensure not empty)
+      if (!birthday) {
+        status.textContent = 'Please enter your birthday.';
+        return;
+      }
+
+      // Validate Faculty (ensure selected)
+      if (!faculty) {
+        status.textContent = 'Please select your faculty.';
+        return;
+      }
+
+      //save only name to local storage for if toggle is checked
       if (rememberToggle.checked) {
         localStorage.setItem("clubName", name);
       }
       
-      
-      submitGoogle(name);
+      //submit all data
+      submitGoogle({ name, phone, email, birthday, faculty });
 
       showWelcomeMessage(name,false);
 
@@ -278,7 +368,7 @@ input:checked + .slider:before {
       status.classList.remove("status-auto");
     }
 
-    function submitGoogle(name){
+    function submitGoogle(data){
        
       // build a form and submit it to the Google Form response endpoint inside the hidden iframe
       const form = document.createElement('form');
@@ -286,11 +376,21 @@ input:checked + .slider:before {
       form.action = FORM_ACTION;
       form.target = 'hidden_iframe';
 
-      const nameField = document.createElement('input');
-      nameField.type = 'hidden';
-      nameField.name = ENTRY_FOR_NAME; //UID Field
-      nameField.value = name.trim();
-      form.appendChild(nameField);
+      const fields = {
+        [ENTRY_FOR_NAME]: data.name,
+        [ENTRY_FOR_PHONE]: data.phone,
+        [ENTRY_FOR_EMAIL]: data.email,
+        [ENTRY_FOR_BIRTHDAY]: data.birthday,
+        [ENTRY_FOR_FACULTY]: data.faculty,
+      };
+
+      for (const [key, value] of Object.entries(fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      }
 
       // append & submit
       document.body.appendChild(form);
