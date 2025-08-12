@@ -251,10 +251,11 @@ input:checked + .slider:before {
   <!-- hidden iframe used to submit the Google Form so the page doesn't navigate -->
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-   <form action="https://docs.google.com/forms/d/e/1FAIpQLSe6WCyUZUTdwGfrdI4o7sS9rYbmhnH-ysystS9rDprSf5zSwA/formResponse" method="POST" target="_blank">
+
+   <!--<form action="https://docs.google.com/forms/d/e/1FAIpQLSe6WCyUZUTdwGfrdI4o7sS9rYbmhnH-ysystS9rDprSf5zSwA/formResponse" method="POST" target="_blank">
   <input name="entryl1262182397" value="Test User">
   <button type="submit">Test Submit</button>
-</form>
+</form> -->
    
   <script>
     // ===== CONFIG =====
@@ -344,6 +345,10 @@ input:checked + .slider:before {
       //save only name to local storage for if toggle is checked
       if (rememberToggle.checked) {
         localStorage.setItem("clubName", name);
+        localStorage.setItem("clubPhone", phone);
+        localStorage.setItem("clubEmail", email);
+        localStorage.setItem("clubBirthday", birthday);
+        localStorage.setItem("clubFaculty", faculty);
       }
       
       //submit all data
@@ -401,8 +406,18 @@ input:checked + .slider:before {
     eraseLink.addEventListener('click', (e) => {
       e.preventDefault();
       localStorage.removeItem("clubName");
+      localStorage.removeItem("clubPhone");
+      localStorage.removeItem("clubEmail");
+      localStorage.removeItem("clubBirthday");
+      localStorage.removeItem("clubFaculty");
+
       nameInput.value = '';
-      status.textContent = 'Your saved name has been removed.';
+      document.getElementById('phone').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('birthday').value = '';
+      document.getElementById('faculty').value = '';
+      
+      status.textContent = 'Your saved profile has been removed.';
       hideWelcomeMessage();
       setTimeout(() => { status.textContent = ''; }, 5000);
     });
@@ -427,14 +442,26 @@ input:checked + .slider:before {
     // on load: if saved, auto-submit
     window.addEventListener("load", () => {
       const savedName = localStorage.getItem("clubName");
+      const savedPhone = localStorage.getItem("clubPhone") || "";
+      const savedEmail = localStorage.getItem("clubEmail");
+      const savedBirthday = localStorage.getItem("clubBirthday");
+      const savedFaculty = localStorage.getItem("clubFaculty");
+
       if (savedName) {
         status.classList.add("status-auto");
         status.classList.remove("status-success");
     
         nameInput.value = savedName; //keep filled for quick check-in
+        document.getElementById('phone').value = savedPhone;
+        document.getElementById('email').value = savedEmail;
+        document.getElementById('birthday').value = savedBirthday;
+        document.getElementById('faculty').value = savedFaculty;
+
         rememberToggle.checked = true;
         showWelcomeMessage(savedName, true);
-        submitGoogle(savedName);
+
+        submitGoogle({name:savedName,phone:savedPhone,email:savedEmail,birthday:savedBirthday,faculty:savedFaculty});
+
         setTimeout(() => {clearDisplay(); status.textContent = ""; status.classList.remove("status-auto"); }, 5000);
       } else {
         rememberToggle.checked = true;
