@@ -352,7 +352,7 @@ input:checked + .slider:before {
       }
       
       //submit all data
-      submitGoogle({ name, phone, email, birthday, faculty });
+      submitGoogle({name, phone, email, birthday, faculty});
 
       showWelcomeMessage(name,false);
 
@@ -378,6 +378,8 @@ input:checked + .slider:before {
       form.method = 'POST';
       form.action = FORM_ACTION;
       form.target = 'hidden_iframe';
+
+      console.log("Submitting data to Google:", data);
 
       const fields = {
         [ENTRY_FOR_NAME]: data.name,
