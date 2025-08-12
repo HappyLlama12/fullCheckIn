@@ -403,7 +403,7 @@ input:checked + .slider:before {
       setTimeout(()=>{ try{ document.body.removeChild(form);}catch(e){} }, 1500);
     }
 
-    eraseLink.addEventListener('click', (e) => {
+    document.getElementById('eraseNow').addEventListener('click', (e) => {
       e.preventDefault();
       localStorage.removeItem("clubName");
       localStorage.removeItem("clubPhone");
