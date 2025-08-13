@@ -55,8 +55,7 @@ INSTRUCTIONS:
     /* Only h1 uses Neue Montreal */
     h1 {
       margin: 0 0 0;             /* Remove bottom margin */
-      margin-bottom: 20px;       /* more space below heading */
-      padding-bottom: 15px;      /* Add bottom padding */
+      margin-bottom: 12px;       /* more space below heading */
       font-family: 'Neue Montreal', system-ui, sans-serif;
       font-weight: 700;
       font-style: normal;
@@ -78,8 +77,8 @@ INSTRUCTIONS:
       pointer-events: none;  /* lets clicks pass through */
       z-index: 1;
     }
-    .card{position: relative; z-index:2; width:360px;max-width:92vw;background:var(--card);padding:28px 24px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);text-align:center}
-    input[type=text],input[type=tel],input[type=email],input[type=date]{width:100%;padding:18px 14px;font-size:17px;margin-bottom:24px;border-radius:5px;border:none; background-color: rgb(230,230,230); box-sizing:border-box; font-family: Gilroy, Arial, Helvetica, sans-serif; color: rgb(52,58,64);}
+    .card{position: relative; z-index:2; width:360px;max-width:92vw;background:var(--card);padding:18px 18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);text-align:center}
+    input[type=text],input[type=tel],input[type=email],input[type=date]{width:100%;padding:16px 10px;font-size:17px;margin-bottom:10px;border-radius:5px;border:none; background-color: rgb(230,230,230); box-sizing:border-box; font-family: Gilroy, Arial, Helvetica, sans-serif; color: rgb(52,58,64);}
     input[type=text]:focus, input[type=email]:focus,input[type=tel]:focus,input[type=date]:focus,select:focus{
       outline: none;
       border-color: var(--accent);
@@ -129,7 +128,7 @@ INSTRUCTIONS:
       select {
         width: 100%;
         padding: 18px 45px 18px 14px; /* top right bottom left*/
-        margin-bottom: 24px;
+        margin-bottom: 10px;
         font-size: 17px;
         border-radius: 5px;
         border: none;
@@ -158,20 +157,26 @@ INSTRUCTIONS:
         font-family: 'Gilroy', Arial, Helvetica, sans-serif;
         font-size: 17px;
       }
-  </style>
+</style>
 </head>
 <body>
   <div class="card" role="main">
     <h1>Hillel Check‑In</h1>
 
     <div id="inputSection">
-      <input type="text" id="fullName" placeholder="Full Name" />
-      <input type="tel" id="phone" placeholder="Phone Number" />
-      <input type="email" id="email" placeholder="Email Address" />
-      <input type="date" id="birthday" placeholder="Birthday" /> 
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" placeholder="Enter your name" />
 
-      
+      <label for="phone">Telephone Number</label>
+      <input type="tel" id="phone" placeholder="Enter your phone number (optional)" />
 
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="Enter your email address" />
+
+      <label for="birthday">Birth Date</label>
+      <input type="date" id="birthday" />
+
+      <label for="faculty">Faculty</label>
       <select id="faculty">
         <option value="" disabled selected>Select Faculty</option>
         <option value="Faculty of Arts and Science">Faculty of Arts and Science</option>
@@ -238,6 +243,20 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(22px);
 }
+
+#inputSection {
+  max-width: 400px; /* optional: keeps form neat */
+}
+
+#inputSection label {
+  display: block;
+  margin-left: 2px;
+  margin-bottom: 2px;
+  font-weight: bold;
+  text-align: left; /* ensures left alignment */
+  color: rgb(52,58,64)
+}
+
 </style>
 
     <div id="eraseLink">
@@ -317,10 +336,15 @@ input:checked + .slider:before {
       }
 
       //validate phone (simple regex for 10 digits)
-      const phoneRegex = /^\d{10}$/;
-      if (!phoneRegex.test(phone)) {
-        status.textContent = 'Please enter a valid 10-digit phone number.';
+      // Phone validation: only if not empty
+      if (phone) {
+        // Remove everything except digits
+        const phoneDigits = phone.replace(/\D/g, "");
+
+        if (phoneDigits.length !== 10) {
+        alert("Please enter a valid phone number with 10 digits, or leave it blank.");
         return;
+        }
       }
 
       // Validate Email (simple email regex)
